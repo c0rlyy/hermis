@@ -2,23 +2,23 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/c0rlyy/hermis/internal/broker"
 	"github.com/c0rlyy/hermis/internal/config"
 	"github.com/c0rlyy/hermis/internal/database"
 	"github.com/c0rlyy/hermis/internal/utils"
 )
 
 type Server struct {
-	port int
-
+	port       int
 	hashParams utils.Params
-
-	db *database.MongoDb
-
-	cfg *config.EnvContents
+	db         *database.MongoDb
+	cfg        *config.EnvContents
+	mb         *broker.MessageBroker
 }
 
 // creates goalng type http server using echo
@@ -26,11 +26,17 @@ func NewServer() *http.Server {
 	cfg := config.GetEnv()
 	port, _ := strconv.Atoi(cfg.Port)
 
+	db := database.NewDb(cfg)
+	if err := db.Health(); err != nil {
+		log.Fatal("error with database")
+	}
+
 	NewServer := &Server{
 		port:       port,
 		hashParams: utils.NewParams(),
-		db:         database.NewDb(cfg),
+		db:         db,
 		cfg:        &cfg,
+		mb:         broker.NewMessageBroker(),
 	}
 
 	// Declare Server config

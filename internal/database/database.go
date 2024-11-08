@@ -25,10 +25,8 @@ type MongoDb struct {
 
 func NewDb(cfg config.EnvContents) *MongoDb {
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(cfg.MongoUrl))
-
 	if err != nil {
 		log.Fatal(err)
-
 	}
 
 	return &MongoDb{
@@ -42,4 +40,8 @@ func (s *MongoDb) GetCollection(CollectionName) *mongo.Collection {
 
 func (s *MongoDb) GetDb() *mongo.Client {
 	return s.MongoDb
+}
+
+func (s *MongoDb) Health() error {
+	return s.MongoDb.Ping(context.TODO(), nil)
 }

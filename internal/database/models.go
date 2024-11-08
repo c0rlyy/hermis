@@ -24,7 +24,6 @@ func NewRefreshToken(userId primitive.ObjectID, refreshToken string) *RefreshTok
 }
 
 func NewUser(email, password, username string) *UserModel {
-
 	return &UserModel{
 		Email:    email,
 		Password: password,

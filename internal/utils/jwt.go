@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,7 +10,7 @@ import (
 
 type JwtCustomClaims struct {
 	Username string             `json:"username"`
-	Id       primitive.ObjectID `json:"id"`
+	Sub      primitive.ObjectID `json:"sub"`
 	Admin    bool               `json:"admin"`
 	jwt.RegisteredClaims
 }
@@ -21,10 +20,10 @@ type JwtRefreshToken struct {
 	jwt.RegisteredClaims
 }
 
-func NewJwtCustomClaims(username string, id primitive.ObjectID) JwtCustomClaims {
+func NewJwtCustomClaims(username string, sub primitive.ObjectID) JwtCustomClaims {
 	return JwtCustomClaims{
 		Username: username,
-		Id:       id,
+		Sub:      sub,
 		Admin:    false,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 30)),
@@ -70,31 +69,31 @@ func CreateRefreshTokenString(id primitive.ObjectID, secretKey string) (string, 
 	return EncodeRefreshToken(&rtClaims, secretKey)
 }
 
-func (c JwtRefreshToken) Valid() error {
-	vErr := new(ValidationError)
-	now := TimeFunc().Unix()
+// func (c JwtRefreshToken) Valid() error {
+// 	vErr := new(ValidationError)
+// 	now := TimeFunc().Unix()
 
-	// The claims below are optional, by default, so if they are set to the
-	// default value in Go, let's not fail the verification for them.
-	if !c.VerifyExpiresAt(now, false) {
-		delta := time.Unix(now, 0).Sub(time.Unix(c.ExpiresAt, 0))
-		vErr.Inner = fmt.Errorf("token is expired by %v", delta)
-		vErr.Errors |= ValidationErrorExpired
-	}
+// 	// The claims below are optional, by default, so if they are set to the
+// 	// default value in Go, let's not fail the verification for them.
+// 	if !c.VerifyExpiresAt(now, false) {
+// 		delta := time.Unix(now, 0).Sub(time.Unix(c.ExpiresAt, 0))
+// 		vErr.Inner = fmt.Errorf("token is expired by %v", delta)
+// 		vErr.Errors |= ValidationErrorExpired
+// 	}
 
-	if !c.VerifyIssuedAt(now, false) {
-		vErr.Inner = fmt.Errorf("Token used before issued")
-		vErr.Errors |= ValidationErrorIssuedAt
-	}
+// 	if !c.VerifyIssuedAt(now, false) {
+// 		vErr.Inner = fmt.Errorf("Token used before issued")
+// 		vErr.Errors |= ValidationErrorIssuedAt
+// 	}
 
-	if !c.VerifyNotBefore(now, false) {
-		vErr.Inner = fmt.Errorf("token is not valid yet")
-		vErr.Errors |= ValidationErrorNotValidYet
-	}
+// 	if !c.VerifyNotBefore(now, false) {
+// 		vErr.Inner = fmt.Errorf("token is not valid yet")
+// 		vErr.Errors |= ValidationErrorNotValidYet
+// 	}
 
-	if vErr.valid() {
-		return nil
-	}
+// 	if vErr.valid() {
+// 		return nil
+// 	}
 
-	return vErr
-}
+// 	return vErr
+// }
