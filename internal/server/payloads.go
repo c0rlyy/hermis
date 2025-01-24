@@ -5,7 +5,6 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type CreatedUserResponse struct {
 	Id       primitive.ObjectID `json:"id"`
 	Username string             `json:"username"`
-	Token    string             `json:"token"`
 }
 
 type CreateUserRequest struct {

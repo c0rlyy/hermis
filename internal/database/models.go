@@ -31,3 +31,11 @@ func NewUser(email, password, username string) *UserModel {
 	}
 
 }
+
+// type Model interface {
+// 	GetId() primitive.ObjectID
+// }
+
+// func (u *UserModel) GetId() primitive.ObjectID {
+// 	return u.ID
+// }

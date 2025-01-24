@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -39,7 +38,7 @@ func main() {
 	server := server.NewServer()
 
 	go gracefulShutdown(server)
-	log.Printf("starting server on port %v", os.Getenv("PORT"))
+	log.Printf("starting server on %v", server.Addr)
 	err := server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))

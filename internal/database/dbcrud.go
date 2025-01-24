@@ -44,12 +44,12 @@ func DeleteOne(filter bson.D, coll CollectionName, db *MongoDb) (*mongo.DeleteRe
 	return db.GetCollection(coll).DeleteOne(context.TODO(), filter)
 }
 
-// func FindById[T any](coll CollectionName, id primitive.ObjectID, db *MongoDb) (T, error) {
-// 	filter := bson.D{{Key: "_id", Value: id}}
-// 	var buff T
-// 	err := ReadOne(filter, coll, &buff, db)
-// 	if err != nil {
-// 		return buff, err
-// 	}
-// 	return buff, nil
-// }
+//	func FindById[T any](coll CollectionName, id primitive.ObjectID, db *MongoDb) (T, error) {
+//		filter := bson.D{{Key: "_id", Value: id}}
+//		var buff T
+//		err := ReadOne(filter, coll, &buff, db)
+//		if err != nil {
+//			return buff, err
+//		}
+//		return buff, nil
+//	}

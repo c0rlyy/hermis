@@ -22,7 +22,7 @@ func Execute(username, passowrd string, mb *broker.MessageBroker, topic string) 
 	client := CreateClient(jar)
 
 	// Get login form HTML
-	loginFormURL := "https://wu.humanum.pl/cas/login?service=https%3A%2F%2Fwu.humanum.pl%2Fwu%2Fj_spring_cas_security_check"
+	loginFormURL := "https://wu.varsovia.study/cas/login?service=https%3A%2F%2Fwu.varsovia.study%2Fwu%2Fj_spring_cas_security_check"
 	htmlStream, err := utils.GetHtml(loginFormURL, client)
 	if err != nil {
 		log.Panic(err)
@@ -38,7 +38,7 @@ func Execute(username, passowrd string, mb *broker.MessageBroker, topic string) 
 	}
 
 	encodedData := utils.NewFormData(username, passowrd, ltTicket, execution).Encode()
-	req, err := http.NewRequest("POST", "https://wu.humanum.pl/cas/login?service=https://wu.humanum.pl/wu/j_spring_cas_security_check", bytes.NewBufferString(encodedData))
+	req, err := http.NewRequest("POST", "https://wu.varsovia.study/cas/login?service=https://wu.varsovia.study/wu/j_spring_cas_security_check", bytes.NewBufferString(encodedData))
 	if err != nil {
 		log.Fatalf("Error creating request: %v", err)
 	}
@@ -58,9 +58,9 @@ func Execute(username, passowrd string, mb *broker.MessageBroker, topic string) 
 	// or i get from server a new jsonid cookie that replaces it but my go client does not register it
 	// btw love python, without it would have never figured it out
 	//SO THIS SETS THE AUTHENTICATED JSONID COOKIE IN THE COOKIE JAR
-	client.Get("https://wu.humanum.pl/wsrest/rest/authenticate")
+	client.Get("https://wu.varsovia.study/wsrest/rest/authenticate")
 
-	authReq, err := http.NewRequest("POST", "https://wu.humanum.pl/wsrest/rest/auth_info", nil)
+	authReq, err := http.NewRequest("POST", "https://wu.varsovia.study/wsrest/rest/auth_info", nil)
 	if err != nil {
 		log.Fatalf("Error creating auth request: %v", err)
 	}

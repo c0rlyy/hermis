@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/c0rlyy/hermis/internal/config"
 	_ "github.com/joho/godotenv/autoload"
@@ -34,8 +35,8 @@ func NewDb(cfg config.EnvContents) *MongoDb {
 	}
 }
 
-func (s *MongoDb) GetCollection(CollectionName) *mongo.Collection {
-	return s.MongoDb.Database(string(DbName)).Collection(string(UsersCollection))
+func (s *MongoDb) GetCollection(coll CollectionName) *mongo.Collection {
+	return s.MongoDb.Database(string(DbName)).Collection(string(coll))
 }
 
 func (s *MongoDb) GetDb() *mongo.Client {
@@ -43,5 +44,8 @@ func (s *MongoDb) GetDb() *mongo.Client {
 }
 
 func (s *MongoDb) Health() error {
-	return s.MongoDb.Ping(context.TODO(), nil)
+	timeout := time.Second * 5
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
+	defer cancel()
+	return s.MongoDb.Ping(ctx, nil)
 }
